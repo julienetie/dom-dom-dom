@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>Tests</title>
+  <link rel='stylesheet' href='../node_modules/mocha/mocha.css' />
+
+<svg width='500' height='300' viewBox='0 0 500 300'>
+   <rect id='testBox' x='250' y='150' width='200' height='200' fill='blue' />
+</svg>
+
+  <!-- Polyfill (required by Babel) -->
+  <script src='../node_modules/babel-core/browser-polyfill.js'></script>
+
+  <!-- Testing libraries -->
+  <script src='../node_modules/mocha/mocha.js'></script>
+  <script src='../node_modules/chai/chai.js'></script>
+  <script src='../node_modules/sinon/pkg/sinon.js'></script>
+  <script src='../node_modules/sinon-chai/lib/sinon-chai.js'></script>
+
+  <!-- Livereload -->
+<!--  <script src='http://localhost:35729/livereload.js'></script> -->
+
+  <!-- Load the built library -->
+  <script src='../tmp/__spec-build.js'></script>
+</head>
+<body>
+  <!-- Required for browser reporter -->
+  <div id='mocha'></div>
+
+<script src='../dist/soucouyant.js'></script>
+<script>
+var testBox = document.getElementById('testBox');
+
+var style = {
+  fill: 'pink'
+};
+
+var style2 = {
+  fill: 'green'
+};
+//
+//o0(testBox).$Attr$('fill','green');
+//console.log( o0(testBox).attr(style).attr('fill','orange').attr('stroke','red').get('Some Argument', 'and another') );
+var fill = o0(testBox).get('fill');
+console.log( fill );
+//console.log( testBox, o0(testBox) );
+ //console.log( o0().anotherFn() );
+</script>
+</body>
+</html>
