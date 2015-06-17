@@ -10,6 +10,7 @@ export default function(attrObj, attrValue) {
     } else {
       throw this.element;
     }
+
     return this;
   }
 

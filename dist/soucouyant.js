@@ -15,6 +15,7 @@
     } else {
       throw this.element;
     }
+
     return this;
   };
 
@@ -22,21 +23,32 @@
     if (arguments.length === 1) {
       return this.element.getAttribute(arguments[0]);
     }
+
     return this;
   };
 
   function Soucouyant(element) {
-    return {
-      attr: function attr() {
-        this.element = element;
-        return attrFn.apply(this, arguments);
-      },
-      get: function get() {
-        this.element = element;
-        return getFn.apply(this, arguments);
-      }
-    };
+
+    if (element.nodeType && element.nodeType === 1) {
+      return {
+        attr: function attr() {
+          this.element = element;
+          return attrFn.apply(this, arguments);
+        },
+
+        get: function get() {
+          this.element = element;
+          return getFn.apply(this, arguments);
+        }
+      };
+    } else if (Array.isArray(element) && element[0].nodeType === 1 && element[1] === 'all') {
+      //  manipulate all
+      alert('All elements in collection');
+    } else if (Array.isArray(element) && Array.isArray(element[0])) {
+      alert('Main Selector stuff');
+    }
   }
+
   var index__o0 = Soucouyant;
   var index = index__o0;
 
