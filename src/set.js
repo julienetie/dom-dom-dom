@@ -1,5 +1,5 @@
 export default function(attrObj, attrValue) {
-    console.log(this.element);
+    //console.log(this.element);
     if (typeof attrObj === 'object' && arguments.length === 1) {
       let attributes;
       for (attributes in attrObj) {

@@ -3,8 +3,8 @@
 })(this, function () {
   'use strict';
 
-  var attrFn = function attrFn(attrObj, attrValue) {
-    console.log(this.element);
+  var setFn = function setFn(attrObj, attrValue) {
+    //console.log(this.element);
     if (typeof attrObj === 'object' && arguments.length === 1) {
       var attributes = undefined;
       for (attributes in attrObj) {
@@ -27,13 +27,57 @@
     return this;
   };
 
-  function Soucouyant(element) {
+  function selector() {
+    for (var i = 0; i < arguments.length; i++) {
+      // id
+      if (arguments[i][1] === 'id' || arguments[i][1] === '#') {
+        o0[arguments[i][0]] = document.getElementById(arguments[i][2]);
+      } else {
+        var getEl = '';
+        // Collections getter
+        if (arguments[i][1] === 'tag' || arguments[i][1] === '@') {
+          getEl = 'getElementsByTagName';
+        }
 
-    if (element.nodeType && element.nodeType === 1) {
+        if (arguments[i][1] === 'class' || arguments[i][1] === '.') {
+          getEl = 'getElementsByClassName';
+        }
+
+        // Collections
+        if (arguments[i].length === 3) {
+          // no index
+          o0[arguments[i][0]] = document[getEl](arguments[i][2])[0];
+        } else if (arguments[i][3] === 'all') {
+          // all for API only
+          o0[arguments[i][0]] = [document[getEl](arguments[i][2]), 'all'];
+        } else if (arguments[i][3] === 'col') {
+          // Col with eq
+          if (arguments[i].length === 5) {
+            var eqq = arguments[i][4];
+            o0[arguments[i][0]] = document[getEl](arguments[i][2])[eqq];
+          } else {
+            o0[arguments[i][0]] = document[getEl](arguments[i][2]);
+          }
+        } else if (arguments[i][3] === 'last') {
+          // Last with eq
+          var collection = document[getEl](arguments[i][2]);
+          if (arguments[i].length === 5) {
+            var eq = arguments[i][4] - 1;
+            o0[arguments[i][0]] = collection[collection.length + eq];
+          } else {
+            o0[arguments[i][0]] = collection[collection.length - 1];
+          }
+        } // end of choices
+      }
+    } // End of fn
+  }
+
+  function Soucouyant(element) {
+    if (element.nodeType === 1) {
       return {
-        attr: function attr() {
+        set: function set() {
           this.element = element;
-          return attrFn.apply(this, arguments);
+          return setFn.apply(this, arguments);
         },
 
         get: function get() {
@@ -41,11 +85,12 @@
           return getFn.apply(this, arguments);
         }
       };
-    } else if (Array.isArray(element) && element[0].nodeType === 1 && element[1] === 'all') {
-      //  manipulate all
-      alert('All elements in collection');
-    } else if (Array.isArray(element) && Array.isArray(element[0])) {
-      alert('Main Selector stuff');
+    } else if (Array.isArray(element)) {
+      if (element[1] === 'all') {
+        alert('Loop though all');
+      } else if (Array.isArray(arguments[0])) {
+        selector.apply(this, arguments);
+      }
     }
   }
 

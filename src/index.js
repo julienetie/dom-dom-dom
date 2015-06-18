@@ -1,12 +1,11 @@
-import attrFn from './attr';
-import getFn from './get';
+import setFn from './set'; import getFn from './get';
+import selectorFn from './selector';
 function Soucouyant(element) {
-
-  if (element.nodeType && element.nodeType === 1) {
+  if (element.nodeType === 1) {
     return {
-    attr: function() {
+    set: function() {
           this.element = element;
-          return attrFn.apply(this, arguments);
+          return setFn.apply(this, arguments);
         },
 
     get: function() {
@@ -14,11 +13,13 @@ function Soucouyant(element) {
           return getFn.apply(this, arguments);
         }
   };
-  }else if (Array.isArray(element) && element[0].nodeType === 1 && element[1] === 'all') {
-    //  manipulate all
-    alert('All elements in collection');
-  }else if (Array.isArray(element) && Array.isArray(element[0])) {
-    alert('Main Selector stuff');
+  }else if (Array.isArray(element)) {
+    if (element[1] === 'all') {
+      alert('Loop though all');
+    } else if (Array.isArray(arguments[0])) {
+      selectorFn.apply(this, arguments);
+
+    }
   }
 }
 
