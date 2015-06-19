@@ -13,7 +13,6 @@
   <!-- Testing libraries -->
   <script src='../node_modules/mocha/mocha.js'></script>
   <script src='../node_modules/chai/chai.js'></script>
-  <script src='../node_modules/chai-jquery/chai-jquery.js'></script>
   <script src='../node_modules/sinon/pkg/sinon.js'></script>
   <script src='../node_modules/sinon-chai/lib/sinon-chai.js'></script>
 
@@ -108,6 +107,15 @@ o0(testBox).set('fill','pink');
 o0(testBoxes[0]).set(style2);
 
 
+i = 0;
+
+function animate(DOMHighResTimeStamp) {
+    console.log(i++);
+    console.log(DOMHighResTimeStamp);
+    ani.request(animate);
+}
+var ani = Object.create(o0.loop());
+ani.request(animate);
 
 //console.log( fill );
 //console.log( testBox, o0(testBox) );

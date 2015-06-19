@@ -1,5 +1,6 @@
 {
   "preset": "airbnb",
   "maximumLineLength": null,
-  "esnext": true
+  "esnext": true,
+  "excludeFiles": ["src/loop.js"]
 }

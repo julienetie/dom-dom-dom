@@ -1,5 +1,8 @@
 import setFn from './set'; import getFn from './get';
-import selectorFn from './selector';
+import selectorFn from './selector'; import posFn from './pos';
+import loopFn from './loop';
+
+// Defined Methods
 
 function Soucouyant(element) {
   if (element.nodeType === 1) {
@@ -12,6 +15,11 @@ function Soucouyant(element) {
     get: function() {
           this.element = element;
           return getFn.apply(this, arguments);
+        },
+
+    pos: function() {
+          this.element = element;
+          return posFn.apply(this, arguments);
         }
   };
   }else if (Array.isArray(element)) {
@@ -25,4 +33,8 @@ function Soucouyant(element) {
 }
 
 let o0 = Soucouyant;
+o0.loop = function(){
+  return loopFn();
+};
+
 export default o0;
