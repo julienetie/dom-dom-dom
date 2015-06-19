@@ -1,4 +1,9 @@
 export default AnimationFrame;
+/**
+ * A modified version of animation-frame by Oleg Slobodskoi
+ * @website https://github.com/kof/animationFrame
+ * @license MIT
+ */
 
 var nativeSupport;
 var nativeRequest;

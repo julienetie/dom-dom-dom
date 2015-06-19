@@ -78,9 +78,23 @@ Gets the elements attribute/s via attribute or a series of attributes that retur
 
 ---
 ### Method chaining
-You can reference DOM elements via the Soucouyant selector engine or directly
+Reference DOM elements via the Soucouyant selector engine or directly
 
     o0(someElement).set('fill', 'url(#grad1)').set('cy', '70').get('cx');
+
+---
+### o0.loop()
+
+Non-conflicting  **requestAnimationFrame** loops. An implementation based on [animation-frame](https://github.com/kof/animation-frame). 
+
+    var loop = new o0.loop();
+      loop.request(someAnimation);
+      loop.cancel(someAnimation);
+
+
+    
+
+---
 
 (MIT)
 Julien Etienne © 2015
