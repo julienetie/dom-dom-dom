@@ -99,46 +99,84 @@
   };
 
   var loopFn = AnimationFrame;
+  /**
+   * A modified version of animation-frame by Oleg Slobodskoi
+   * @website https://github.com/kof/animationFrame
+   * @license MIT
+   */
 
-  var nativeSupport;
-  var nativeRequest;
-  var nativeCancel;
+  var request, cancel, supported, nativeImpl;
 
-  function native() {
-    var global = window;
+  var global = window;
 
-    try {
-      global.top.name;
-      global = global.top;
-    } catch (e) {}
+  // Test if we are within a foreign domain. Use raf from the top if possible.
+  try {
+    // Accessing .name will throw SecurityError within a foreign domain.
+    global.top.name;
+    global = global.top;
+  } catch (e) {}
 
-    nativeRequest = global.requestAnimationFrame;
-    nativeCancel = global.cancelAnimationFrame || global.cancelRequestAnimationFrame;
-    nativeSupport = false;
+  request = global.requestAnimationFrame;
+  cancel = global.cancelAnimationFrame || global.cancelRequestAnimationFrame;
+  supported = false;
 
-    var vendors = ['Webkit', 'Moz', 'ms', 'O'];
+  var vendors = ['Webkit', 'Moz', 'ms', 'O'];
 
-    for (var i = 0; i < vendors.length && !nativeRequest; i++) {
-      nativeRequest = global[vendors[i] + 'RequestAnimationFrame'];
-      nativeCancel = global[vendors[i] + 'CancelAnimationFrame'] || global[vendors[i] + 'CancelRequestAnimationFrame'];
-    }
-
-    if (nativeRequest) {
-      nativeRequest.call(null, function () {
-        nativeSupport = true;
-      });
-    }
+  // Grab the native implementation.
+  for (var i = 0; i < vendors.length && !request; i++) {
+    request = global[vendors[i] + 'RequestAnimationFrame'];
+    cancel = global[vendors[i] + 'CancelAnimationFrame'] || global[vendors[i] + 'CancelRequestAnimationFrame'];
   }
-  native();
 
+  // Test if native implementation works.
+  // There are some issues on ios6
+  // http://shitwebkitdoes.tumblr.com/post/47186945856/native-requestanimationframe-broken-on-ios-6
+  // https://gist.github.com/KrofDrakula/5318048
+
+  if (request) {
+    request.call(null, function () {
+      supported = true;
+    });
+  }
+
+  var now = Date.now || function () {
+    return new Date().getTime();
+  };
+
+  function perfnow(window) {
+    // make sure we have an object to work with
+    if (!('performance' in window)) {
+      window.performance = {};
+    }
+    var perf = window.performance;
+    // handle vendor prefixing
+    window.performance.now = perf.now || perf.mozNow || perf.msNow || perf.oNow || perf.webkitNow ||
+    // fallback to Date
+    Date.now || function () {
+      return new Date().getTime();
+    };
+  }
+  perfnow(window);
+
+  // Weird native implementation doesn't work if context is defined.
+  var nativeRequest = request;
+  var nativeCancel = cancel;
+
+  /**
+   * Animation frame constructor.
+   *
+   * Options:
+   *   - `useNative` use the native animation frame if possible, defaults to true
+   *   - `frameRate` pass a custom frame rate
+   *
+   * @param {Object|Number} options
+   */
   function AnimationFrame(options) {
     if (!(this instanceof AnimationFrame)) return new AnimationFrame(options);
     options || (options = {});
 
-    if (typeof options == 'number') options = {
-      frameRate: options
-    };
-
+    // Its a frame rate.
+    if (typeof options == 'number') options = { frameRate: options };
     options.useNative != null || (options.useNative = true);
     this.options = options;
     this.frameRate = options.frameRate || AnimationFrame.FRAME_RATE;
@@ -150,39 +188,62 @@
     this._tickCounter = 0;
   }
 
+  /**
+   * Default frame rate used for shim implementation. Native implementation
+   * will use the screen frame rate, but js have no way to detect it.
+   *
+   * If you know your target device, define it manually.
+   *
+   * @type {Number}
+   * @api public
+   */
   AnimationFrame.FRAME_RATE = 60;
 
+  /**
+   * Replace the globally defined implementation or define it globally.
+   *
+   * @param {Object|Number} [options]
+   * @api public
+   */
   AnimationFrame.shim = function (options) {
     var animationFrame = new AnimationFrame(options);
+
     window.requestAnimationFrame = function (callback) {
       return animationFrame.request(callback);
     };
     window.cancelAnimationFrame = function (id) {
       return animationFrame.cancel(id);
     };
+
     return animationFrame;
   };
 
+  /**
+   * Request animation frame.
+   * We will use the native RAF as soon as we know it does works.
+   *
+   * @param {Function} callback
+   * @return {Number} timeout id or requested animation frame id
+   * @api public
+   */
   AnimationFrame.prototype.request = function (callback) {
     var self = this;
 
-    function now() {
-      if (window.performance && window.performance.now) {
-        return window.performance.now();
-        return now() - now();
-      }
-    }
-
+    // Alawys inc counter to ensure it never has a conflict with the native counter.
+    // After the feature test phase we don't know exactly which implementation has been used.
+    // Therefore on #cancel we do it for both.
     ++this._tickCounter;
 
-    if (nativeSupport && this.options.useNative && !this._isCustomFrameRate) {
+    if (supported && this.options.useNative && !this._isCustomFrameRate) {
       return nativeRequest(callback);
     }
 
     if (!callback) throw new TypeError('Not enough arguments');
 
     if (this._timeoutId == null) {
-
+      // Much faster than Math.max
+      // http://jsperf.com/math-max-vs-comparison/3
+      // http://jsperf.com/date-now-vs-date-gettime/11
       var delay = this._frameLength + this._lastTickTime - now();
       if (delay < 0) delay = 0;
 
@@ -194,7 +255,7 @@
         self._callbacks = {};
         for (var id in callbacks) {
           if (callbacks[id]) {
-            if (nativeSupport && self.options.useNative) {
+            if (supported && self.options.useNative) {
               nativeRequest(callbacks[id]);
             } else {
               callbacks[id](performance.now());
@@ -205,14 +266,20 @@
     }
 
     this._callbacks[this._tickCounter] = callback;
+
     return this._tickCounter;
   };
 
+  /**
+   * Cancel animation frame.
+   *
+   * @param {Number} timeout id or requested animation frame id
+   *
+   * @api public
+   */
   AnimationFrame.prototype.cancel = function (id) {
-    if (nativeSupport && this.options.useNative) {
-      nativeCancel(id);
-      delete this._callbacks[id];
-    }
+    if (supported && this.options.useNative) nativeCancel(id);
+    delete this._callbacks[id];
   };
 
   function Soucouyant(element) {
