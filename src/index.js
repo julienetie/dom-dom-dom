@@ -1,5 +1,6 @@
 import setFn from './set'; import getFn from './get';
 import selectorFn from './selector';
+
 function Soucouyant(element) {
   if (element.nodeType === 1) {
     return {
@@ -15,7 +16,7 @@ function Soucouyant(element) {
   };
   }else if (Array.isArray(element)) {
     if (element[1] === 'all') {
-      alert('Loop though all');
+      console.log('Loop though all');
     } else if (Array.isArray(arguments[0])) {
       selectorFn.apply(this, arguments);
 

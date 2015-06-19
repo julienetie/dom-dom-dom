@@ -1,52 +1,76 @@
 export default function selector() {
-  for (var i = 0; i < arguments.length; i++) {
-    // id
-    if (arguments[i][1] === 'id' || arguments[i][1] === '#') {
-      o0[arguments[i][0]] = document.getElementById(arguments[i][2]);
-    } else {
-      var getEl = '';
-      // Collections getter
-      if (arguments[i][1] === 'tag' || arguments[i][1] === '@') {
-        getEl = 'getElementsByTagName';
-      }
+  var args = arguments,
+      selectByName,
+      getEl,
+      newProperty,
+      selectorValue,
+      setGetEl,
+      fourthOption,
+      i;
 
-      if (arguments[i][1] === 'class' || arguments[i][1] === '.') {
-        getEl = 'getElementsByClassName';
-      }
+  function getElement(getElementType, selectorValueName) {
+    return document[getElementType](selectorValueName);
+  }
 
-      // Collections
-      if (arguments[i].length === 3) { // no index
-        o0[arguments[i][0]] = document[getEl](arguments[i][2])[0];
-      }
-
-      else if (arguments[i][3] === 'all') { // all for API only
-        o0[arguments[i][0]] = [document[getEl](arguments[i][2]), 'all'];
-      }
-
-      else if (arguments[i][3] === 'col') { // Col with eq
-        if (arguments[i].length === 5) {
-          var eqq = arguments[i][4];
-          o0[arguments[i][0]] = document[getEl](arguments[i][2])[eqq];
-        }
-
-        else {
-          o0[arguments[i][0]] = document[getEl](arguments[i][2]);
-        }
-
-      }
-
-      else if (arguments[i][3] === 'last') { // Last with eq
-        var collection = document[getEl](arguments[i][2]);
-        if (arguments[i].length === 5) {
-          var eq = arguments[i][4] - 1;
-          o0[arguments[i][0]] = collection[collection.length + eq];
-        }
-
-        else {
-          o0[arguments[i][0]] = collection[collection.length - 1];
-        }
-
-      } // end of choices
+  setGetEl = (function() {
+    if (selectByName === 'tag' || selectByName === '@') {
+      getEl = 'getElementsByTagName';
     }
-  } // End of fn
+
+    if (selectByName === 'class' || selectByName === '.') {
+      getEl = 'getElementsByClassName';
+    }
+  }());
+
+  function getFirstElementOfCollection(iter) {
+    if (args[iter].length === 3) {
+      newProperty = getElement(getEl, selectorValue)[0];
+    }
+  }
+
+  function getElementsFromCollection(iter) {
+    if (fourthOption === 'all') {
+      newProperty = [getElement(getEl, selectorValue), 'all'];
+    }
+
+    else if (fourthOption === 'col') {
+      if (args[iter].length === 5) {
+        var eqq = args[iter][4];
+        newProperty = getElement(getEl, selectorValue)[eqq];
+      }
+
+      else {
+        newProperty = getElement(getEl, selectorValue);
+      }
+
+    }
+
+    else if (fourthOption === 'last') {
+      var collection = getElement(getEl, selectorValue);
+      if (args[iter].length === 5) {
+        var eq = args[iter][4] - 1;
+        newProperty = collection[collection.length + eq];
+      }
+
+      else {
+        newProperty = collection[collection.length - 1];
+      }
+
+    }
+  }
+
+  for (i = 0; i < args.length; i++) {
+    selectByName = args[i][1];
+    selectorValue = args[i][2];
+    fourthOption = args[i][3];
+    if (selectByName === 'id' || selectByName === '#') {
+      newProperty = getElement('getElementById', selectorValue);
+    } else {
+      setGetEl();
+      getFirstElementOfCollection(i);
+      getElementsFromCollection(i);
+    }
+
+    o0[args[i][0]] = newProperty;
+  }
 }

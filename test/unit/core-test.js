@@ -1,5 +1,5 @@
 import MyLibrary from '../../src/index';
-
+/*
 describe('A feature test', () => {
   describe('one function', () => {
     beforeEach(() => {
@@ -31,3 +31,4 @@ describe('A feature test', () => {
     });
   });
 });
+*/
