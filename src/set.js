@@ -13,4 +13,3 @@ export default function(attrObj, attrValue) {
 
     return this;
   }
-

@@ -6,7 +6,7 @@ describe('The attribue values', function() {
  it('Should be a single object', function() {
 
  })
-}) 
+})
 
 /*
 describe('A second file of tests', () => {

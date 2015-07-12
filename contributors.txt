@@ -1,0 +1,23 @@
+Style Guide:
+‾‾‾‾‾‾‾‾‾‾‾
+Soucouyant adheres to the Google JavaScript Style Guide with the exception of 
+multiple var declarations.
+    http://google.github.io/styleguide/javascriptguide.xml
+
+This is good:
+    var a = 1, b = 2, c, d, e;
+
+This is not allowed: 
+    var a = 1;
+    var b = 2; 
+    var c;
+    var d;
+    var e;
+
+Sort by assigned variables to unassigned, in alphanumeric order.
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+ES6:
+‾‾‾
+Soucouyant is built with Babel and ES6 modules but only utillizes light usage 
+of the ES6 specification for performance reasons. If in doubt of a transpiled
+performance hit it stick to ES5 as this API is dependent on efficnency.

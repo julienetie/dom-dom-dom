@@ -1,6 +1,5 @@
 {
-  "preset": "airbnb",
-  "maximumLineLength": null,
-  "esnext": true,
-  "excludeFiles": ["src/loop.js"]
+  "preset": "google",
+  "maximumLineLength": 80,
+  "esnext": true
 }
