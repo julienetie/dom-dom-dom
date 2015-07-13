@@ -5,7 +5,7 @@ export default AnimationFrame;
  * @license MIT
  */
 
-var global = window, request, cancel, supported, nativeImpl,i;
+var global = window, request, cancel, supported, nativeImpl, i;
 
 // Test if we are within a foreign domain. Use raf from the top if possible.
 try {
@@ -14,17 +14,17 @@ try {
   global = global.top;
 } catch (e) {}
 
-request = global.requestAnimationFrame
-cancel = global.cancelAnimationFrame || global.cancelRequestAnimationFrame
-supported = false
+request = global.requestAnimationFrame;
+cancel = global.cancelAnimationFrame || global.cancelRequestAnimationFrame;
+supported = false;
 
-var vendors = ['Webkit', 'Moz', 'ms', 'O']
+var vendors = ['Webkit', 'Moz', 'ms', 'O'];
 
 // Grab the native implementation.
 for (i = 0; i < vendors.length && !request; i++) {
-  request = global[vendors[i] + 'RequestAnimationFrame']
+  request = global[vendors[i] + 'RequestAnimationFrame'];
   cancel = global[vendors[i] + 'CancelAnimationFrame'] ||
-    global[vendors[i] + 'CancelRequestAnimationFrame']
+    global[vendors[i] + 'CancelRequestAnimationFrame'];
 }
 
 // Test if native implementation works.
@@ -35,7 +35,7 @@ for (i = 0; i < vendors.length && !request; i++) {
 
 if (request) {
   request.call(null, function() {
-    supported = true
+    supported = true;
   });
 }
 
@@ -72,7 +72,7 @@ function AnimationFrame(options) {
 
   // Its a frame rate.
   if (typeof options == 'number') {
-    options = {frameRate: options}
+    options = {frameRate: options};
   }
   options.useNative != null || (options.useNative = true);
   this.options = options;
@@ -149,13 +149,13 @@ AnimationFrame.prototype.request = function(callback) {
       for (var id in callbacks) {
         if (callbacks[id]) {
           if (supported && self.options.useNative) {
-            nativeRequest(callbacks[id])
+            nativeRequest(callbacks[id]);
           } else {
             callbacks[id](performance.now());
           }
         }
       }
-    }, delay)
+    }, delay);
   }
   this._callbacks[this._tickCounter] = callback;
   return this._tickCounter;

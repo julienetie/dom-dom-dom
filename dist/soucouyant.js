@@ -4,18 +4,17 @@
   'use strict';
 
   var setFn = function setFn(attrObj, attrValue) {
-    //console.log(this.element);
+    var strOrNum = typeof attrValue === 'string' || 'number';
     if (typeof attrObj === 'object' && arguments.length === 1) {
       var attributes = undefined;
       for (attributes in attrObj) {
         this.element.setAttributeNS(null, attributes, attrObj[attributes]);
       }
-    } else if (typeof attrObj === 'object' && typeof attrValue === 'string' || 'number') {
+    } else if (typeof attrObj === 'object' && strOrNum) {
       this.element.setAttributeNS(null, attrObj, attrValue);
     } else {
       throw this.element;
     }
-
     return this;
   };
 
@@ -25,6 +24,10 @@
     }
 
     return this;
+  };
+
+  var posFn = function posFn() {
+    console.log('Xpos, Ypos ');
   };
 
   function selector() {
@@ -93,10 +96,6 @@
       o0[args[i][0]] = newProperty;
     }
   }
-
-  var posFn = function posFn() {
-    console.log('Xpos, Ypos ');
-  };
 
   var loopFn = AnimationFrame;
   /**
@@ -276,9 +275,20 @@
     delete this._callbacks[id];
   };
 
+  /**
+   * Imports common methods into the core
+   */
   function Soucouyant(element) {
     if (element.nodeType === 1) {
       return {
+        /**
+         * Sets attributes to the current selector.
+         * @param {Object} attrObj - An object of attributes & values as key-
+         * value pairs. Expects hyphonated attributes key names to be strings.
+         * @param {String} attrObj - The attribute type as a string.
+         * @param {String} attrValue - The attribute value to be applied.
+         * @param {Number} attrValue - The attribute value to be applied.
+         */
         set: function set() {
           this.element = element;
           return setFn.apply(this, arguments);

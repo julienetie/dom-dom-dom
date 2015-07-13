@@ -1,5 +1,6 @@
 {
   "preset": "google",
   "maximumLineLength": 80,
-  "esnext": true
+  "esnext": true,
+  "excludeFiles": ["./node_modules/**", "./test/**"]
 }

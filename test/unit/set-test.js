@@ -1,12 +1,9 @@
 import setFn from '../../src/set';
 
-
-
 describe('The attribue values', function() {
- it('Should be a single object', function() {
-
- })
-})
+  it('Should be a single object', function() {
+  });
+});
 
 /*
 describe('A second file of tests', () => {
@@ -14,7 +11,6 @@ describe('A second file of tests', () => {
     spy(setFn, 'setFnFn');
     setFn.setFnFn();
   });
-
   it('should have been run once', () => {
     expect(setFn.setFnFn).to.have.been.calledOnce;
   });
@@ -25,9 +21,8 @@ describe('A second file of tests', () => {
 });
 
 
-
 */
-/* 
+/*
 "attr(String)"
 "attr(String) on cloned elements,
 "attr(String) in XML Files",
@@ -42,7 +37,7 @@ attr('tabindex', value)"
 "removeAttr(String)",
 "removeAttr(String
 "removeAttr(Multi String, variable space width)",
-"prop(String, Object)", 
+"prop(String, Object)",
 "prop(String, Object) on null/undefined"
 "prop('tabindex')
 "prop('tabindex', value)

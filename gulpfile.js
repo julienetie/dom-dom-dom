@@ -51,7 +51,7 @@ function createLintTask(taskName, files) {
 createLintTask('lint-src', ['src/**/*.js']);
 
 // Lint our test code
-createLintTask('lint-test', ['test/**/*.js']);
+//createLintTask('lint-test', ['test/**/*.js']);
 
 // Build two versions of the library
 gulp.task('build', ['lint-src', 'clean'], function(done) {
@@ -112,7 +112,7 @@ function test() {
     .pipe($.mocha({reporter: 'nyan', globals: config.mochaGlobals}));
 }
 
-gulp.task('coverage', ['lint-src', 'lint-test'], function(done) {
+gulp.task('coverage', ['lint-src'], function(done) {
   require('babel/register');
   gulp.src(['src/**/*.js'])
     .pipe($.istanbul({ instrumenter: isparta.Instrumenter }))
@@ -125,7 +125,7 @@ gulp.task('coverage', ['lint-src', 'lint-test'], function(done) {
 });
 
 // Lint and run our tests
-gulp.task('test', ['lint-src', 'lint-test'], function() {
+gulp.task('test', ['lint-src'], function() {
   require('babel/register');
   return test();
 });
@@ -133,7 +133,7 @@ gulp.task('test', ['lint-src', 'lint-test'], function() {
 // Ensure that linting occurs before browserify runs. This prevents
 // the build from breaking due to poorly formatted code.
 gulp.task('build-in-sequence', function(callback) {
-  runSequence(['lint-src', 'lint-test'], 'browserify', callback);
+  runSequence(['lint-src'], 'browserify', callback);
 });
 
 const watchFiles = ['src/**/*', 'test/**/*', 'package.json', '**/.eslintrc', '.jscsrc'];

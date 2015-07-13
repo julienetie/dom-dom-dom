@@ -1,12 +1,6 @@
 export default function selector() {
-  var args = arguments,
-      selectByName,
-      getEl,
-      newProperty,
-      selectorValue,
-      setGetEl,
-      fourthOption,
-      i;
+  var args = arguments, selectByName, getEl, newProperty,
+      selectorValue, setGetEl, fourthOption, i;
 
   function getElement(getElementType, selectorValueName) {
     return document[getElementType](selectorValueName);
@@ -31,28 +25,19 @@ export default function selector() {
   function getElementsFromCollection(iter) {
     if (fourthOption === 'all') {
       newProperty = [getElement(getEl, selectorValue), 'all'];
-    }
-
-    else if (fourthOption === 'col') {
+    }else if (fourthOption === 'col') {
       if (args[iter].length === 5) {
         var eqq = args[iter][4];
         newProperty = getElement(getEl, selectorValue)[eqq];
-      }
-
-      else {
+      }else {
         newProperty = getElement(getEl, selectorValue);
       }
-
-    }
-
-    else if (fourthOption === 'last') {
+    }else if (fourthOption === 'last') {
       var collection = getElement(getEl, selectorValue);
       if (args[iter].length === 5) {
         var eq = args[iter][4] - 1;
         newProperty = collection[collection.length + eq];
-      }
-
-      else {
+      } else {
         newProperty = collection[collection.length - 1];
       }
 
