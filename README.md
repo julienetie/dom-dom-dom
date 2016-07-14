@@ -1,4 +1,4 @@
-#Soucouyant v0.2
+#dom dom dom v0.2
 
 A small SVG DOM selector library, (can also be used for HTML). It's similar to jquery's Sizzle but organised and easier to use naively. Declare all selectors within the o0(); function first (all in one place at the top of your document), then use any defined selector as a property, either natively, with API (chaining), or within the API (to apply modifications to collections).
 
